@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vuvvy</title>
+
+    <style>
+        body {
+            background-color: #f8eee5;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 30px 16px;
+        }
+
+        h1 {
+            color: #76513e;
+        }
+
+        p {
+            color: #987963;
+        }
+
+        .walking-area {
+            width: 100%;
+            height: 220px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .speech-bubble {
+            display: inline-block;
+            background-color: #fffaf5;
+            color: #76513e;
+
+            padding: 15px 24px;
+            border-radius: 20px;
+
+            font-size: 16px;
+            line-height: 1.5;
+
+            max-width: 80%;
+            margin: 20px auto;
+
+            box-shadow: 0 3px 8px rgba(118, 81, 62, 0.12);
+        }
+
+        .hello-button {
+            display: block;
+            margin: 5px auto;
+
+            background-color: #ea7a9b;
+            color: #fffaf5;
+
+            border: none;
+            border-radius: 15px;
+
+            padding: 12px 28px;
+            min-height: 44px;
+            font-size: 16px;
+
+            cursor: pointer;
+        }
+
+        .hello-button:hover {
+            background-color: #e74777;
+        }
+
+        .hello-button:active {
+            transform: scale(0.95);
+        }
+
+        .colorful-vuvvy {
+            display: flex;
+            justify-content: center;
+            margin: 20px auto 40px;
+        }
+
+        .colorful-vuvvy {
+            display: flex;
+            justify-content: center;
+            gap: clamp(4px, 2vw, 12px);
+            margin: 20px auto 40px;
+        }
+
+        
+        .color-choice {
+            width: 32px;
+            height: 32px;
+            flex: 0 0 32px;
+
+            border: none;
+            padding: 0;
+            background-color: transparent;
+
+            /* Original expressions */
+            background-image: url("Slimey/vuvvy_colors.png");
+            background-size: 368px 32px;
+
+            image-rendering: pixelated;
+            cursor: pointer;
+        }
+
+        /* Original character positions */
+        .color-choice:nth-child(1) { background-position: 0 0; }
+        .color-choice:nth-child(2) { background-position: -48px 0; }
+        .color-choice:nth-child(3) { background-position: -96px 0; }
+        .color-choice:nth-child(4) { background-position: -144px 0; }
+        .color-choice:nth-child(5) { background-position: -192px 0; }
+        .color-choice:nth-child(6) { background-position: -240px 0; }
+        .color-choice:nth-child(7) { background-position: -288px 0; }
+        .color-choice:nth-child(8) { background-position: -336px 0; }
+
+        /* White outline for selected Vuvvy */
+        .color-choice.selected {
+            outline: 2px solid white;
+            outline-offset: 4px;
+            border-radius: 4px;
+        }
+
+        /* Switch to walking sprites only while hovering */
+        .color-choice:hover {
+            background-size: 320px 32px;
+            background-position: 0 0;
+
+            animation:
+                preview-frames 0.6s steps(2, end) infinite,
+                preview-bounce 0.6s ease-in-out infinite;
+        }
+
+        .color-choice:nth-child(1):hover { background-image: url("Slimey/vuvvy_red.png"); }
+        .color-choice:nth-child(2):hover { background-image: url("Slimey/vuvvy_orange.png"); }
+        .color-choice:nth-child(3):hover { background-image: url("Slimey/vuvvy_yellow.png"); }
+        .color-choice:nth-child(4):hover { background-image: url("Slimey/vuvvy_green.png"); }
+        .color-choice:nth-child(5):hover { background-image: url("Slimey/vuvvy_lightgreen.png"); }
+        .color-choice:nth-child(6):hover { background-image: url("Slimey/vuvvy_blue.png"); }
+        .color-choice:nth-child(7):hover { background-image: url("Slimey/vuvvy_purple.png"); }
+        .color-choice:nth-child(8):hover { background-image: url("Slimey/vuvvy_pink.png"); }
+
+        /* The four right-side characters face left */
+        .color-choice:nth-child(n+5):hover {
+            transform: scaleX(-1);
+        }
+
+        @keyframes preview-frames {
+            from { background-position: 0 0; }
+            to { background-position: -96px 0; }
+        }
+
+        @keyframes preview-bounce {
+            0%, 100% { translate: 0 0; }
+            50% { translate: 0 -4px; }
+        }
+
+        .vuvvy-sprite {
+            width: 160px;
+            height: 160px;
+
+            background-image: url("Slimey/vuvvy_green.png");
+            background-size: 1600px 160px;
+            background-position: 0 0;
+
+            image-rendering: pixelated;
+
+            position: absolute;
+            top: 0;
+            left: 0;
+
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <h1>Hello! I'm Vuvvy!</h1>
+
+    <div class="colorful-vuvvy">
+        <button class="color-choice" data-color="red" aria-label="Red vuvvy"></button>
+        <button class="color-choice" data-color="orange" aria-label="Orange vuvvy"></button>
+        <button class="color-choice" data-color="yellow" aria-label="Yellow vuvvy"></button>
+        <button class="color-choice selected" data-color="green" aria-label="Green vuvvy"></button>
+        <button class="color-choice" data-color="lightgreen" aria-label="Light green vuvvy"></button>
+        <button class="color-choice" data-color="blue" aria-label="Blue vuvvy"></button>
+        <button class="color-choice" data-color="purple" aria-label="Purple vuvvy"></button>
+        <button class="color-choice" data-color="pink" aria-label="Pink vuvvy"></button>
+    </div>
+
+    <div class="walking-area">
+        <div class="vuvvy-sprite"></div>
+    </div>
+
+    <div class="speech-bubble" id="message">
+        My little Vuvvy project starts here.
+    </div>
+
+    <button class="hello-button" onclick="sayHello()">Say hello!</button>
+
+    <script>
+    function sayHello() {
+
+        // Cancel previous hello animation
+        clearTimeout(helloTimer);
+        clearTimeout(happyWalkTimer);
+
+        // Stop current movement and animations
+        clearTimeout(timer);
+        clearInterval(wiggleTimer);
+        clearTimeout(holdTimer);
+
+        isTapped = false;
+        isHolding = false;
+
+        // Say hello!
+        document.getElementById("message").innerText =
+            "Hello! I'm happy to see you! ♡";
+
+        // Face the current walking direction
+        vuvvy.style.transform =
+            direction === 1 ? "scaleX(1)" : "scaleX(-1)";
+
+        // Frame 6: smile and pause for 3 seconds
+        vuvvy.style.backgroundPosition = "-1200px 0";
+
+        helloTimer = setTimeout(() => {
+
+            // Start happy walking
+            isHappy = true;
+            walkHappy();
+
+            // Return to normal after 10 seconds
+            happyWalkTimer = setTimeout(() => {
+                isHappy = false;
+                clearTimeout(timer);
+
+                document.getElementById("message").innerText =
+                    "My little Vuvvy project starts here.";
+
+                walk();
+            }, 10000);
+
+        }, 3000);
+    }
+    </script>
+
+    <script>
+        const vuvvy = document.querySelector(".vuvvy-sprite");
+        const area = document.querySelector(".walking-area");
+
+        let position = 0;
+        const vuvvySize = 160;
+        let direction = 1;
+        let frame = 0;
+        let stepsSinceRest = 0;
+        let timer;
+        let helloTimer;
+        let happyWalkTimer;
+        let happyFrame = 0;
+        let isHappy = false;
+        let isTapped = false;
+        let holdTimer;
+        let isHolding = false;
+        let wiggleTimer;
+        let wiggleFrame = 0;
+
+        // Change Vuvvy's colour
+        const colorChoices = document.querySelectorAll(".color-choice");
+
+        colorChoices.forEach(button => {
+            button.addEventListener("click", function() {
+
+                // Get the selected colour
+                const color = this.dataset.color;
+
+                // Change the big Vuvvy's sprite sheet
+                vuvvy.style.backgroundImage =
+                `url("Slimey/vuvvy_${color}.png")`;
+
+                // Update the selected colour outline
+                colorChoices.forEach(choice => {
+                    choice.classList.remove("selected");
+                });
+
+                this.classList.add("selected");
+            });
+        });
+
+
+        function walk() {
+            const maxPosition = area.clientWidth - vuvvySize;
+            if (isTapped) return;
+
+            // Move one small >> step 20 pixels per step
+            position += direction * 20;
+
+        // Check whether Vuvvy reached an edge
+            let reachedEdge = false;
+
+            if (position >= maxPosition) {
+                position = maxPosition;
+                direction = -1;
+                reachedEdge = true;
+            } else if (position <= 0) {
+                position = 0;
+                direction = 1;
+                reachedEdge = true;
+            }
+
+            // Switch between walking frames 1 and 2
+            frame = 1 - frame;
+
+            vuvvy.style.left = position + "px";
+            vuvvy.style.backgroundPosition =
+                frame === 0 ? "0 0" : "-240px 0";
+
+            // Face the walking direction
+            vuvvy.style.transform =
+                direction === 1 ? "scaleX(1)" : "scaleX(-1)";
+
+            // Randomly take a rest(>=10stepAfterLastRest), or rest at an edge
+            stepsSinceRest++;
+            if (stepsSinceRest >= 10 && Math.random() < 0.02) {
+                rest();
+            } else {
+                // 300 milliseconds between steps
+                timer = setTimeout(walk, 300);
+            }
+        }
+        
+        function walkHappy() {
+            const maxPosition = area.clientWidth - vuvvySize;
+
+            position += direction * 20;
+
+            if (position >= maxPosition) {
+                position = maxPosition;
+                direction = -1;
+            } else if (position <= 0) {
+                position = 0;
+                direction = 1;
+            }
+
+            // Alternate between frames 6 and 7
+            vuvvy.style.backgroundPosition =
+                happyFrame === 0 ? "-1200px 0" : "-1440px 0";
+
+            happyFrame = 1 - happyFrame;
+
+            vuvvy.style.left = position + "px";
+
+            vuvvy.style.transform =
+                direction === 1 ? "scaleX(1)" : "scaleX(-1)";
+
+            timer = setTimeout(walkHappy, 300);
+        }
+
+        function rest() {
+            // Frame 3: resting pose
+            vuvvy.style.backgroundPosition = "-480px 0";
+
+            // Rest for a random time between 3 and 10 seconds
+            const restTime = 3000 + Math.random() * 7000;
+
+            timer = setTimeout(() => {
+                frame = 0;
+                stepsSinceRest = 0;
+                walk();
+            }, restTime);
+        }
+
+        // Start touching Vuvvy
+        vuvvy.addEventListener("pointerdown", function() {
+            clearTimeout(timer);
+            clearTimeout(holdTimer);
+
+            isTapped = false;
+            isHolding = false;
+
+            holdTimer = setTimeout(() => {
+                isHolding = true;
+
+                document.getElementById("message").innerText =
+                    "Nnnngh! Let me gooo! (˶˃⤙˂˶)";
+
+                // Start wiggling between frames 4 and 5
+                wiggleFrame = 0;
+
+                wiggleTimer = setInterval(() => {
+                    vuvvy.style.backgroundPosition =
+                        wiggleFrame === 0 ? "-720px 0" : "-960px 0";
+
+                    wiggleFrame = 1 - wiggleFrame;
+                }, 250);
+
+            }, 2000); //start wiggling after 2 sec.
+        });
+
+        // Release Vuvvy
+        vuvvy.addEventListener("pointerup", function() {
+            clearTimeout(holdTimer);
+
+            if (isHolding) {
+            // Stop the wiggling animation
+            clearInterval(wiggleTimer);
+
+            isHolding = false;
+
+            document.getElementById("message").innerText =
+                "Finally... thank you. ♡";
+
+            } else {
+                // This was a quick tap
+                isTapped = true;
+
+                vuvvy.style.backgroundPosition = "-960px 0";
+
+                document.getElementById("message").innerText =
+                    "Hehe! That tickles! ♡";
+            }
+
+            timer = setTimeout(() => {
+                isTapped = false;
+
+                if (isHappy) {
+                    document.getElementById("message").innerText =
+                        "Hello! I'm happy to see you! ♡";
+
+                    // Resume happy walking
+                    walkHappy();
+                } else {
+                    document.getElementById("message").innerText =
+                        "My little Vuvvy project starts here.";
+
+                    walk();
+                }
+            }, 1000);
+        });
+
+        
+        // Start walking!
+        walk();
+
+    </script>
+
+</body>
+</html>
