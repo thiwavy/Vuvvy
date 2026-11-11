@@ -89,6 +89,11 @@
             height: 32px;
             flex: 0 0 32px;
 
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-touch-callout: none;
+            -webkit-user-drag: none;
+
             border: none;
             padding: 0;
             background-color: transparent;
@@ -119,13 +124,15 @@
         }
 
         /* Switch to walking sprites only while hovering */
-        .color-choice:hover {
-            background-size: 320px 32px;
-            background-position: 0 0;
-
-            animation:
-                preview-frames 0.6s steps(2, end) infinite,
-                preview-bounce 0.6s ease-in-out infinite;
+        @media (hover: hover) and (pointer: fine) {
+            .color-choice:hover {
+                background-size: 320px 32px;
+                background-position: 0 0;
+    
+                animation:
+                    preview-frames 0.6s steps(2, end) infinite,
+                    preview-bounce 0.6s ease-in-out infinite;
+            }
         }
 
         .color-choice:nth-child(1):hover { background-image: url("Slimey/vuvvy_red.png"); }
